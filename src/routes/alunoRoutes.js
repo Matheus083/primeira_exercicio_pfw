@@ -8,6 +8,9 @@ router.get("/",(request, response, next)=>{
     console.log("Executando antes do findMany");
     next();
 }, alunoController.findMany);
+
+router.get("/:id", alunoController.findById);
+
 router.post("/", validarAluno, alunoController.create);
 
 module.exports = router;
