@@ -32,6 +32,45 @@ class AlunoService{
         return aluno;
     }
 
+    async update(id, dados) {
+        const aluno = await prisma.aluno.findUnique({
+            where: {
+                id: Number(id)
+            }
+        });
+
+        if(!aluno){
+            const AlunoNaoEncontradoError = require("../errors/AlunoNaoEncontradoError");
+            throw new AlunoNaoEncontradoError();
+        }
+
+        const {nome, email} = dados;
+
+        if(!nome && !email){
+            throw new AlunoInvalidoError("Nome e Email são Obrigatórios", 400);
+        }
+
+        const dadosAtualizacao = {};
+
+        if(nome){
+            dadosAtualizacao.nome = nome;
+        }
+        if(email){
+            dadosAtualizacao.email = email;
+        }
+
+        const alunoAtualizado = await prisma.aluno.update({
+            where: {
+                id: Number(id)
+            },
+            data: dadosAtualizacao
+        });
+
+        return alunoAtualizado;
+    }
+
+
+
     async create(aluno){
         const {nome, email} = aluno;
         if(!nome || !email){
