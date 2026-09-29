@@ -69,6 +69,26 @@ class AlunoService{
         return alunoAtualizado;
     }
 
+    async delete(id) {
+        const aluno = await prisma.aluno.findUnique({
+            where: {
+                id: Number(id)
+            }
+        });
+
+        if(!aluno){
+            const AlunoNaoEncontradoError = require("../errors/AlunoNaoEncontradoError");
+            throw new AlunoNaoEncontradoError();
+        }
+
+        const alunoDeletado = await prisma.aluno.delete({
+            where: {
+                id: Number(id)
+            }
+        });
+
+        return alunoDeletado;
+    }
 
 
     async create(aluno){
